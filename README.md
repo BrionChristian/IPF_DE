@@ -17,5 +17,6 @@ genepMD.txt and GPL8789_family.soft.gz are not committed to main (too big)
 
 
 ## Results:
-See Report.pdf for a presentation of the analyses and results 
+See [Report.pdf](https://github.com/BrionChristian/IPF_DE/blob/main/Report.pdf) for a presentation of the analyses and results 
+
 ****  in progress  ****
