@@ -10,7 +10,7 @@ The pipeline is constitued of six R scripts writen for "R version 4.1.2 (2021-11
 
 See [**pipeline_flowChart.pdf**](https://github.com/BrionChristian/IPF_DE/blob/main/pipeline_flowChart.pdf) in the folder for a complete description
 
-genepMD.txt and GPL8789_family.soft.gz are not committed to main (too big)
+GPL8789_family.soft.gz are not committed to main (too big)
 
 ## Rational:
 ****  in progress  ****
