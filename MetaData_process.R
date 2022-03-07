@@ -183,6 +183,7 @@ parseGeneNames<-function(x) { #parsing function for lapply
 temp <- data.frame(t(data.frame(lapply(1:nrow(genepMD), parseGeneNames))))
 colnames(temp) <- c("geneID","geneName","funct")
 genepMD2 <- cbind(genepMD,temp)
+genepMD2 <- genepMD2[,!(colnames(genepMD2) %in% c("gene_assignment","mrna_assignment"))] #reduce file size
 
 #data exploration
 sort(summary(as.factor(genepMD2$geneName)),decreasing = T)[1:20]
