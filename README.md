@@ -7,13 +7,15 @@ https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE32538 for ncRNA affymetrix
 see publication at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7138412/
 
 The pipeline is constitued of six R scripts writen for "R version 4.1.2 (2021-11-01)"
-See pipeline_flowChart.pdf in the folder for a complete description
+
+See [**pipeline_flowChart.pdf**](https://github.com/BrionChristian/IPF_DE/blob/main/pipeline_flowChart.pdf) in the folder for a complete description
 
 genepMD.txt and GPL8789_family.soft.gz are not committed to main (too big)
 
-Rational:
+## Rational:
 ****  in progress  ****
 
 
+## Results:
 See Report.pdf for a presentation of the analyses and results 
 ****  in progress  ****
