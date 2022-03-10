@@ -136,33 +136,58 @@ dev.off()
 M[rownames(M)=="MUC5B",names(colSums(sign)) %in% miRNA_highimpact]
 M[rownames(M)=="CCDC19",names(colSums(sign)) %in% miRNA_highimpact]
 
-#exemple of correlation
-bestGene<-"CCDC19"
-bestmiRNA<-"hsa-miR-34c-5p"
-svg(filename = "correlationEG.svg",width = 6,height = 5)
-plot(data.mat.miRNA.only[rownames(data.mat.miRNA.only)==bestmiRNA,],data.mat.only[rownames(data.mat.only)==bestGene,],
-     xlab=bestmiRNA,ylab=bestGene)
-dev.off()
 
 #save 10 DE miRNA with the most correlation in csv for easy copy paste on web base tool
 write.table(data.frame(miRNA_highimpact),"microRNA_highimpact.csv",sep = ',',row.names = F,col.names = F)
 
 #select randomly 5 genes from each cluster to provide the corrplot
-clustplot<-2
 geneclust2<-geneclust2[order(geneclust2$clust),]
 rand32<-c(sample((1:nrow(geneclust2))[geneclust2$clust==2],5,replace = F),
           sample((1:nrow(geneclust2))[geneclust2$clust%in%c(5,6,8)],5,replace = F),
           sample((1:nrow(geneclust2))[geneclust2$clust==4],5,replace = F),
           sample((1:nrow(geneclust2))[geneclust2$clust%in%c(1,7,3)],5,replace = F))
+colcorrplot<-rev(COL2('RdBu', 200))
 corrplot(M[as.character(geneclust2$geneName[rand32]),colnames(M) %in% miRNA_highimpact],
          p.mat = adjpvalM[as.character(geneclust2$geneName[rand32]),colnames(M) %in% miRNA_highimpact],
-         sig.level = 0.10, addrect = 2)
-# #to run only once as each run will provide a different plot
+         sig.level = 0.10, addrect = 2,col=colcorrplot)
+#to run only once as each run will provide a different plot
 # svg(filename = "corrplot_upreg.svg",width = 6,height = 7)
 # corrplot(M[as.character(geneclust2$geneName[rand32]),colnames(M) %in% miRNA_highimpact],
 #          p.mat = adjpvalM[as.character(geneclust2$geneName[rand32]),colnames(M) %in% miRNA_highimpact],
-#          sig.level = 0.10, addrect = 2)
+#          sig.level = 0.10, addrect = 2,col=colcorrplot)
 # dev.off()
+
+
+#exemple of correlation
+samplecut <- read.table(file = "sampleGeneclust.txt",header = T,quote = "\"",sep = "\t",stringsAsFactors = T)
+
+bestGene<-"PROM2"
+bestmiRNA<-"hsa-miR-31"
+geneexp<-data.mat[rownames(data.mat) == genepMDunique$ID[genepMDunique$geneName==bestGene], colnames(data.mat) %in% sampleMD2$Sample_title[sampleMD2$Sample_title %in% matching$Sample_title & sampleMD2$final.diagnosis %in% c("control","IPF/UIP")]]
+miRNAexp<-data.mat.miRNA[rownames(data.mat.miRNA) == paste0(bestmiRNA,"_st"), colnames(data.mat.miRNA) %in% sample_miMD2$Sample_title[sample_miMD2$Sample_title %in% matching$Sample_title & sample_miMD2$final.diagnosis %in% c("control","IPF/UIP")]]
+sum(names(geneexp)==names(miRNAexp))
+colplot<-rep("orangered",length(miRNAexp))
+colplot[names(geneexp) %in% samplecut$sampleID[samplecut$clust==1]]<-"orange"
+colplot[names(geneexp) %in% samplecut$sampleID[samplecut$clust==3]]<-"deepskyblue"
+svg(filename = "correlationEG.svg",width = 6,height = 5)
+plot(miRNAexp,geneexp,xlab=bestmiRNA,ylab=bestGene,pch=16,col=colplot)
+dev.off()
+
+M[M[,colnames(M)=="hsa-miR-138"]> 0.5,colnames(M)=="hsa-miR-138"]
+PPAP2C
+M[M[,colnames(M)=="hsa-miR-138"]< -0.5,colnames(M)=="hsa-miR-138"]
+
+bestGene<-"PROM2"
+bestmiRNA<-"hsa-miR-138"
+geneexp<-data.mat[rownames(data.mat) == genepMDunique$ID[genepMDunique$geneName==bestGene], colnames(data.mat) %in% sampleMD2$Sample_title[sampleMD2$Sample_title %in% matching$Sample_title & sampleMD2$final.diagnosis %in% c("control","IPF/UIP")]]
+miRNAexp<-data.mat.miRNA[rownames(data.mat.miRNA) == paste0(bestmiRNA,"_st"), colnames(data.mat.miRNA) %in% sample_miMD2$Sample_title[sample_miMD2$Sample_title %in% matching$Sample_title & sample_miMD2$final.diagnosis %in% c("control","IPF/UIP")]]
+sum(names(geneexp)==names(miRNAexp))
+colplot<-rep("orangered",length(miRNAexp))
+colplot[names(geneexp) %in% samplecut$sampleID[samplecut$clust==1]]<-"orange"
+colplot[names(geneexp) %in% samplecut$sampleID[samplecut$clust==3]]<-"deepskyblue"
+svg(filename = "correlationEG2.svg",width = 6,height = 5)
+plot(miRNAexp,geneexp,xlab=bestmiRNA,ylab=bestGene,pch=16,col=colplot)
+dev.off()
 
 
 #===================

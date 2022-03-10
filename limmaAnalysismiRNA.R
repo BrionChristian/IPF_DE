@@ -234,5 +234,5 @@ colorPC[sampleMD2$Sample_title %in% samplecut$sampleID[samplecut$clust==4]]<-"de
 svg(filename = "microRNAEXP_PCA.svg",width = 6,height = 5)
 plot(data_PC$x[,1:2],pch=16,col=colorPC,xlab=paste0("PC1 (",round(data_PC$percent[1]*100,1),"%)"),
      ylab=paste0("PC2(",round(data_PC$percent[2]*100,1),"%)"))
-legend("topright",legend = c("cluster2/3: eavy impact","cluster1: ligh impact","cluster4: control "),pch=15,col=c("orangered","orange","deepskyblue"),bg = NA)
+legend("topright",legend = c("cluster2/3: heavy impact","cluster1: light impact","cluster4: control "),pch=15,col=c("orangered","orange","deepskyblue"),bg = NA)
 dev.off()
