@@ -180,6 +180,9 @@ dme <- pathview(gene.data=kegg_gene_list2, pathway.id="hsa04370", species = kegg
 #Hedgehog signaling pathway
 dme <- pathview(gene.data=kegg_gene_list2, pathway.id="hsa04340", species = kegg_organism,
                 low = list(gene = "deepskyblue", cpd = "green"), mid = list(gene = "gray", cpd = "gray"), high = list(gene = "yellow", cpd = "red"))
+#TGF-beta signaling pathway
+dme <- pathview(gene.data=kegg_gene_list2, pathway.id="hsa04350", species = kegg_organism,
+                low = list(gene = "deepskyblue", cpd = "green"), mid = list(gene = "gray", cpd = "gray"), high = list(gene = "yellow", cpd = "red"))
 setwd(workdir)
 
 #=========

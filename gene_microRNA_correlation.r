@@ -145,7 +145,8 @@ geneclust2<-geneclust2[order(geneclust2$clust),]
 rand32<-c(sample((1:nrow(geneclust2))[geneclust2$clust==2],5,replace = F),
           sample((1:nrow(geneclust2))[geneclust2$clust%in%c(5,6,8)],5,replace = F),
           sample((1:nrow(geneclust2))[geneclust2$clust==4],5,replace = F),
-          sample((1:nrow(geneclust2))[geneclust2$clust%in%c(1,7,3)],5,replace = F))
+          sample((1:nrow(geneclust2))[geneclust2$clust%in%c(1,7,3)],4,replace = F),
+          (1:nrow(geneclust2))[geneclust2$geneName=="STX12"])
 colcorrplot<-rev(COL2('RdBu', 200))
 corrplot(M[as.character(geneclust2$geneName[rand32]),colnames(M) %in% miRNA_highimpact],
          p.mat = adjpvalM[as.character(geneclust2$geneName[rand32]),colnames(M) %in% miRNA_highimpact],
@@ -161,7 +162,7 @@ corrplot(M[as.character(geneclust2$geneName[rand32]),colnames(M) %in% miRNA_high
 #exemple of correlation
 samplecut <- read.table(file = "sampleGeneclust.txt",header = T,quote = "\"",sep = "\t",stringsAsFactors = T)
 
-bestGene<-"PROM2"
+bestGene<-"STX12"
 bestmiRNA<-"hsa-miR-31"
 geneexp<-data.mat[rownames(data.mat) == genepMDunique$ID[genepMDunique$geneName==bestGene], colnames(data.mat) %in% sampleMD2$Sample_title[sampleMD2$Sample_title %in% matching$Sample_title & sampleMD2$final.diagnosis %in% c("control","IPF/UIP")]]
 miRNAexp<-data.mat.miRNA[rownames(data.mat.miRNA) == paste0(bestmiRNA,"_st"), colnames(data.mat.miRNA) %in% sample_miMD2$Sample_title[sample_miMD2$Sample_title %in% matching$Sample_title & sample_miMD2$final.diagnosis %in% c("control","IPF/UIP")]]
@@ -177,7 +178,7 @@ M[M[,colnames(M)=="hsa-miR-138"]> 0.5,colnames(M)=="hsa-miR-138"]
 PPAP2C
 M[M[,colnames(M)=="hsa-miR-138"]< -0.5,colnames(M)=="hsa-miR-138"]
 
-bestGene<-"PROM2"
+bestGene<-"STX12"
 bestmiRNA<-"hsa-miR-138"
 geneexp<-data.mat[rownames(data.mat) == genepMDunique$ID[genepMDunique$geneName==bestGene], colnames(data.mat) %in% sampleMD2$Sample_title[sampleMD2$Sample_title %in% matching$Sample_title & sampleMD2$final.diagnosis %in% c("control","IPF/UIP")]]
 miRNAexp<-data.mat.miRNA[rownames(data.mat.miRNA) == paste0(bestmiRNA,"_st"), colnames(data.mat.miRNA) %in% sample_miMD2$Sample_title[sample_miMD2$Sample_title %in% matching$Sample_title & sample_miMD2$final.diagnosis %in% c("control","IPF/UIP")]]
@@ -257,6 +258,7 @@ mirDIP_E_DOWN$MicroRNA[mirDIP_E_DOWN$MicroRNA %in% c("hsa-miR-30a-3p","hsa-miR-3
 mirDIP_E_DOWN$MicroRNA[mirDIP_E_DOWN$MicroRNA %in% c("hsa-miR-30d-3p","hsa-miR-30d-5p")] <- "hsa-miR-30d"
 mirDIP_E_DOWN$MicroRNA[mirDIP_E_DOWN$MicroRNA %in% c("hsa-miR-31-3p","hsa-miR-31-5p")] <- "hsa-miR-31"
 mirDIP_E_DOWN$MicroRNA[mirDIP_E_DOWN$MicroRNA %in% c("hsa-miR-652-3p","hsa-miR-652-5p")] <- "hsa-miR-652"
+mirDIP_E_DOWN$MicroRNA[mirDIP_E_DOWN$MicroRNA %in% c("hsa-miR-138-1-3p","hsa-miR-138-2-3p","hsa-miR-138-5p")] <- "hsa-miR-138"
 mirDIP_E_DOWN$MicroRNA<-as.factor(mirDIP_E_DOWN$MicroRNA)
 summary(mirDIP_E_DOWN$MicroRNA)
 
@@ -267,6 +269,7 @@ mirDIP_E_UP$MicroRNA[mirDIP_E_UP$MicroRNA %in% c("hsa-miR-30a-3p","hsa-miR-30a-5
 mirDIP_E_UP$MicroRNA[mirDIP_E_UP$MicroRNA %in% c("hsa-miR-30d-3p","hsa-miR-30d-5p")] <- "hsa-miR-30d"
 mirDIP_E_UP$MicroRNA[mirDIP_E_UP$MicroRNA %in% c("hsa-miR-31-3p","hsa-miR-31-5p")] <- "hsa-miR-31"
 mirDIP_E_UP$MicroRNA[mirDIP_E_UP$MicroRNA %in% c("hsa-miR-652-3p","hsa-miR-652-5p")] <- "hsa-miR-652"
+mirDIP_E_UP$MicroRNA[mirDIP_E_UP$MicroRNA %in% c("hsa-miR-138-1-3p","hsa-miR-138-2-3p","hsa-miR-138-5p")] <- "hsa-miR-138"
 mirDIP_E_UP$MicroRNA<-as.factor(mirDIP_E_UP$MicroRNA)
 summary(mirDIP_E_UP$MicroRNA)
 
@@ -294,9 +297,99 @@ mirDIP_E_ALL_highImpact <- rbind(mirDIP_E_UP_highImpact,mirDIP_E_DOWN_highImpact
 mirDIP_E_ALL_highImpact <- unique(mirDIP_E_ALL_highImpact,by=c(1,4))
 mirDIP_E_ALL_highImpact$MicroRNA <- as.factor(as.character(mirDIP_E_ALL_highImpact$MicroRNA))
 
+
 #percentage of ON target interaction compare to all
 svg(filename = "mirDIP-ON-OFFtarget.svg",width = 11,height = 8)
 b<-barplot(summary(mirDIP_E_ALL_highImpact$MicroRNA)/summary(mirDIP_microRNAhighimpact$MicroRNA)*100,ylim = c(0,15),col = "orange",ylab="mirDIP: percentage on target",names.arg = gsub("hsa-","",names(summary(mirDIP_E_ALL_highImpact$MicroRNA))))
 text(b,summary(mirDIP_E_ALL_highImpact$MicroRNA)/summary(mirDIP_microRNAhighimpact$MicroRNA)*100,round(summary(mirDIP_E_ALL_highImpact$MicroRNA)/summary(mirDIP_microRNAhighimpact$MicroRNA)*100,2),pos = 3)
 b<-barplot(summary(mirDIP_E_DOWN_highImpact$MicroRNA)/summary(mirDIP_microRNAhighimpact$MicroRNA)*100,ylim = c(0,15),col = "deepskyblue",add=T,xaxt='n',yaxt='n')
 dev.off()
+
+#network visualisation
+library(reshape2)
+library(igraph)
+
+test<-dcast(mirDIP_E_UP_highImpact,Gene.Symbol~MicroRNA)
+rownames(test)<-test$Gene.Symbol
+colnames(test)<-sub("hsa-","",colnames(test))
+test<-test[,-1]
+test2<-matrix(0,nrow=nrow(test)+ncol(test),ncol=nrow(test)+ncol(test))
+colnames(test2)<-c(colnames(test),rownames(test))
+rownames(test2)<-c(colnames(test),rownames(test))
+test2[(ncol(test)+1):nrow(test2),1:ncol(test)]<-as.matrix(test)
+network <- graph_from_adjacency_matrix(t(as.matrix(test2)))
+svg(filename = "mirDIP-network.svg",width = 7,height = 7)
+plot(network, vertex.color = c(rep("grey",ncol(test)), rep("orange",nrow(test))), vertex.label.color = c(rep("blue",ncol(test)), rep("black",nrow(test))),edge.arrow.size=.5,vertex.size=8,vertex.label.cex=c(rep(1.2,ncol(test)), rep(0.7,nrow(test))),edge.arrow.color="#00000088")
+dev.off()
+
+
+test<-dcast(mirDIP_E_DOWN_highImpact,Gene.Symbol~MicroRNA)
+rownames(test)<-test$Gene.Symbol
+colnames(test)<-sub("hsa-","",colnames(test))
+test<-test[,-1]
+test2<-matrix(0,nrow=nrow(test)+ncol(test),ncol=nrow(test)+ncol(test))
+colnames(test2)<-c(colnames(test),rownames(test))
+rownames(test2)<-c(colnames(test),rownames(test))
+test2[(ncol(test)+1):nrow(test2),1:ncol(test)]<-as.matrix(test)
+network <- graph_from_adjacency_matrix(t(as.matrix(test2)))
+svg(filename = "mirDIP-network.svg",width = 7,height = 7)
+plot(network, vertex.color = c(rep("grey",ncol(test)), rep("deepskyblue",nrow(test))), vertex.label.color = c(rep("blue",ncol(test)), rep("black",nrow(test))),edge.arrow.size=.5,vertex.size=8,vertex.label.cex=c(rep(1.2,ncol(test)), rep(0.7,nrow(test))),edge.arrow.color="#00000088")
+dev.off()
+
+#inverstigate negative correlation
+M2miRNA<-M[,colnames(M) %in% c("hsa-miR-31","hsa-miR-138")]
+M2miRNA2<-M2miRNA[rownames(M2miRNA) %in% c("EDNR","PRKCE","NEBL","VGLL3","STX12","TACC2","RAPGEF5","RNF144B","STARD13","PCTP","AFF2"),]
+
+#better network with correlation
+M10miRNA<-M[rownames(M2miRNA) %in% geneclust2$geneName,colnames(M) %in% miRNA_highimpact]
+M10miRNAfdr<-adjpvalM[rownames(M2miRNA) %in% geneclust2$geneName,colnames(M) %in% miRNA_highimpact]
+M10miRNAsigneg<- M10miRNAfdr
+M10miRNAsigneg<- M10miRNA<0 & M10miRNAfdr<0.01
+
+genemirDIP_UP<-levels(mirDIP_E_UP_highImpact$Gene.Symbol)
+genemirDIP_UP[!(genemirDIP_UP %in% as.character(geneclust2$geneName[!(geneclust2$clust %in% c(1,7,3))]))]
+
+genemirDIP_DOWN<-levels(mirDIP_E_DOWN_highImpact$Gene.Symbol)
+genemirDIP_DOWN[!(genemirDIP_DOWN %in% as.character(geneclust2$geneName[(geneclust2$clust %in% c(1,7,3))]))]
+
+M10miRNAnegInt<-M10miRNAsigneg
+M10miRNAnegInt[,]<-0
+for (i in 1:nrow(M10miRNAsigneg)) {
+  for (j in 1:ncol(M10miRNAsigneg)) {
+    if (M10miRNAsigneg[i,j]) {
+      if (nrow(mirDIP_E_ALL_highImpact[mirDIP_E_ALL_highImpact$Gene.Symbol==rownames(M10miRNAsigneg)[i] & mirDIP_E_ALL_highImpact$MicroRNA==colnames(M10miRNAsigneg)[j],])>0) {
+        M10miRNAnegInt[i,j]<-1
+      } 
+    }
+  }
+}
+
+M10miRNAnegIntALL<-M10miRNAnegInt[rowSums(M10miRNAnegInt)>0,]
+
+colnames(M10miRNAnegIntALL)<-sub("hsa-","",colnames(M10miRNAnegIntALL))
+
+test3<-matrix(0,nrow=nrow(M10miRNAnegIntALL)+ncol(M10miRNAnegIntALL),ncol=nrow(M10miRNAnegIntALL)+ncol(M10miRNAnegIntALL))
+colnames(test3)<-c(colnames(M10miRNAnegIntALL),rownames(M10miRNAnegIntALL))
+rownames(test3)<-c(colnames(M10miRNAnegIntALL),rownames(M10miRNAnegIntALL))
+test3[(ncol(M10miRNAnegIntALL)+1):nrow(test3),1:ncol(M10miRNAnegIntALL)]<-as.matrix(M10miRNAnegIntALL)
+network <- graph_from_adjacency_matrix(t(as.matrix(test3)))
+nodcol<-rep("grey",ncol(test3))
+nodcol[colnames(test3) %in% geneclust2$geneName[(geneclust2$clust %in% c(1,7,3))]]<-"deepskyblue"
+nodcol[colnames(test3) %in% geneclust2$geneName[!(geneclust2$clust %in% c(1,7,3))]]<-"orange"
+textcol<-rep("black",ncol(test3))
+textcol[c(1,2,3,5,6,10)]<-"blue"
+textcol[c(4,7,8,9)]<-"red"
+nodcex<-c(rep(1.2,ncol(M10miRNAnegIntALL)), rep(0.7,nrow(M10miRNAnegIntALL)))
+
+plot(network, vertex.color = nodcol, vertex.label.color = textcol,edge.arrow.size=.5,vertex.size=8,vertex.label.cex=nodcex,edge.arrow.color="#00000088")
+
+M10miRNA[rownames(M10miRNA)=="CCND2",]
+bestGene<-"CCND2"
+bestmiRNA<-"hsa-miR-652"
+geneexp<-data.mat[rownames(data.mat) == genepMDunique$ID[genepMDunique$geneName==bestGene], colnames(data.mat) %in% sampleMD2$Sample_title[sampleMD2$Sample_title %in% matching$Sample_title & sampleMD2$final.diagnosis %in% c("control","IPF/UIP")]]
+miRNAexp<-data.mat.miRNA[rownames(data.mat.miRNA) == paste0(bestmiRNA,"_st"), colnames(data.mat.miRNA) %in% sample_miMD2$Sample_title[sample_miMD2$Sample_title %in% matching$Sample_title & sample_miMD2$final.diagnosis %in% c("control","IPF/UIP")]]
+sum(names(geneexp)==names(miRNAexp))
+colplot<-rep("orangered",length(miRNAexp))
+colplot[names(geneexp) %in% samplecut$sampleID[samplecut$clust==1]]<-"orange"
+colplot[names(geneexp) %in% samplecut$sampleID[samplecut$clust==3]]<-"deepskyblue"
+plot(miRNAexp,geneexp,xlab=bestmiRNA,ylab=bestGene,pch=16,col=colplot)

@@ -139,6 +139,8 @@ testDF[testDF[,i+1]>1 & testDF[,i+9] < 0.00001,][10,]
 boxplot(data.mat[testDF[,i+1]>1 & testDF[,i+9] < 0.00001,][10,]~sampleMD2$final.diagnosis) #IPF effect for one gene
 plot(data.mat[testDF[,i+1]>1 & testDF[,i+9] < 0.00001,][10,]~sampleMD2$smoke_impact_score) #smoking effect for the same gene
 
+testDFall<-testDF
+
 #===========================
 #same analysis but subset with smoking score: smoking score have no effect on gene expression
 # design_DF = model.matrix(~ sampleMD2$age + sampleMD2$gender + sampleMD2$final.diagnosis + sampleMD2$smoke_impact_score)
@@ -170,6 +172,10 @@ plot(data.mat[testDF[,i+1]>1 & testDF[,i+9] < 0.00001,][10,]~sampleMD2$smoke_imp
 # }
 # 
 # plot(testDF[,1],testDF[,6],pch=16,cex=0.5,col=rgb(0,0,0,0.1),main=colnames(testDF)[6],ylab="log2FC",xlab="average (log2)")
+# 
+# dataMatch<-merge(testDFall,testDF,by.x=0,by.y=0,all.x=T,all.y=T)
+# 
+# plot(dataMatch$`IPF/UIP.x`,dataMatch$`IPF/UIP.y`)
 
 ###no gene significantly associated to smoking score
 
